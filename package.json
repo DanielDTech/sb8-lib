@@ -1,0 +1,12 @@
+{
+  "name": "sb8-lib",
+  "version": "0.1.0",
+  "description": "Text helpers shared by the sb7 applications. No surface of its own.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": "./src/index.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
