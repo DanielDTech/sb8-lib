@@ -2,10 +2,24 @@
 // of its own: no server, no page, no command. It is exercised through the
 // applications built on it.
 
-/** A lowercase, dash separated slug. Characters outside a to z and 0 to 9 become separators. */
+const LATIN_FOLDING = new Map([['ß', 'ss']]);
+const COMBINING_MARKS = /[\u0300-\u036f]/g;
+
+function foldLatinLetters(text) {
+  let folded = text;
+  for (const [letter, plainForm] of LATIN_FOLDING) {
+    folded = folded.replaceAll(letter, plainForm);
+  }
+  return folded;
+}
+
+/** A lowercase, dash separated slug. Accented Latin letters fold to their plain form and `ß` folds to `ss`; every remaining run of characters outside a to z and 0 to 9 becomes one separator. A letter that neither decomposes nor has a folding entry is dropped rather than folded. */
 export function slugify(text) {
-  return String(text ?? '')
+  const withoutAccents = String(text ?? '')
     .toLowerCase()
+    .normalize('NFD')
+    .replace(COMBINING_MARKS, '');
+  return foldLatinLetters(withoutAccents)
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }

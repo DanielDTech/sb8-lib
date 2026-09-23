@@ -16,9 +16,13 @@ document a structure the code does not have.
 The whole public surface, and the only area a change to behaviour touches. It
 owns three pure functions, each independent of the others and of any state:
 
-- `slugify(text)` — lowercases and returns a dash separated slug. Every run of
-  characters outside `a-z0-9` becomes one separator; leading and trailing
-  separators are stripped.
+- `slugify(text)` — lowercases, folds accented Latin letters to their plain
+  form and `ß` to `ss`, then returns a dash separated slug. Every remaining
+  run of characters outside `a-z0-9` becomes one separator; leading and trailing
+  separators are stripped. Folding is canonical decomposition with the combining
+  marks stripped, plus a mapping table for the letters that do not decompose. A
+  letter that neither decomposes nor has a table entry, such as the `ﬁ`
+  ligature, is dropped rather than folded.
 - `escapeHtml(text)` — escapes the five HTML special characters (`&`, `<`, `>`,
   `"`, `'`) so arbitrary text is safe to place inside an element.
 - `truncate(text, max = 80)` — returns the text unchanged when it fits in `max`
@@ -72,7 +76,7 @@ any platform; it is consumed as source by the sb7 applications, which pin it as 
 git dependency to a tag:
 
 ```
-git+https://github.com/DanielDTech/sb8-lib.git#v0.1.0
+git+https://github.com/DanielDTech/sb8-lib.git#v0.2.0
 ```
 
 A release here is therefore a tag, and consumers adopt it by bumping the ref
