@@ -17,18 +17,31 @@ The whole public surface, and the only area a change to behaviour touches. It
 owns three pure functions, each independent of the others and of any state:
 
 - `slugify(text)` — lowercases, folds accented Latin letters to their plain
-  form and `ß` to `ss`, then returns a dash separated slug. Every remaining
-  run of characters outside `a-z0-9` becomes one separator; leading and trailing
-  separators are stripped. Folding is canonical decomposition with the combining
-  marks stripped, plus a mapping table for the letters that do not decompose. A
-  letter that neither decomposes nor has a table entry, such as the `ﬁ`
-  ligature, is dropped rather than folded.
+  form, then returns a dash separated slug. Every remaining run of characters
+  outside `a-z0-9` becomes one separator; leading and trailing separators are
+  stripped. Folding is canonical decomposition with the combining marks
+  stripped, plus a mapping table for the letters that have no canonical
+  decomposition: `ß`, the stroke and modified letters such as `ø` and `ł`,
+  and the typographic ligatures such as `ﬁ` and `ĳ`. A letter with neither a
+  decomposition nor a table entry is not folded, and what becomes of it depends
+  on where it sits in the word.
 - `escapeHtml(text)` — escapes the five HTML special characters (`&`, `<`, `>`,
   `"`, `'`) so arbitrary text is safe to place inside an element.
 - `truncate(text, max = 80)` — returns the text unchanged when it fits in `max`
   characters, otherwise cuts it so the ellipsis is the last character and the
   result is exactly `max` characters. A `max` below 1 leaves no room for the
   ellipsis, so it yields `''` rather than a string longer than `max`.
+
+`slugify` has one property worth stating on its own, because it has explained
+several findings and is easy to miss: **position within the word changes the
+outcome for any character the fold table does not handle.** Such a character
+never survives, but it fails in one of two ways. At a word boundary it is
+dropped and leaves no trace, because the separator it becomes is then stripped
+as a leading or trailing one. Inside a word it collapses with its neighbours
+into a single separator, so the word gains a dash. `Æon` slugging as `on` and
+`Søren` as `s-ren` were one missing table entry and not two defects. Adding a
+row or removing one therefore changes both positions at once, and the interior
+case is the one that goes unnoticed.
 
 Two conventions hold across all three and any function added beside them: the
 input is coerced with `String(text ?? '')`, so `null` and `undefined` yield `''`

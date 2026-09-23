@@ -2,7 +2,25 @@
 // of its own: no server, no page, no command. It is exercised through the
 // applications built on it.
 
-const LATIN_FOLDING = new Map([['ß', 'ss']]);
+const LATIN_FOLDING = new Map([
+  ['ß', 'ss'],
+  ['ø', 'o'],
+  ['đ', 'd'],
+  ['ħ', 'h'],
+  ['ŧ', 't'],
+  ['ı', 'i'],
+  ['æ', 'ae'],
+  ['œ', 'oe'],
+  ['ł', 'l'],
+  ['ð', 'd'],
+  ['þ', 'th'],
+  ['ﬁ', 'fi'],
+  ['ﬂ', 'fl'],
+  ['ﬀ', 'ff'],
+  ['ﬃ', 'ffi'],
+  ['ﬄ', 'ffl'],
+  ['ĳ', 'ij'],
+]);
 const COMBINING_MARKS = /[\u0300-\u036f]/g;
 
 function foldLatinLetters(text) {
@@ -13,7 +31,7 @@ function foldLatinLetters(text) {
   return folded;
 }
 
-/** A lowercase, dash separated slug. Accented Latin letters fold to their plain form and `ß` folds to `ss`; every remaining run of characters outside a to z and 0 to 9 becomes one separator. A letter that neither decomposes nor has a folding entry is dropped rather than folded. */
+/** A lowercase, dash separated slug. Accented Latin letters fold to their plain form, and the letters with no canonical decomposition fold through the mapping table; every remaining run of characters outside a to z and 0 to 9 becomes one separator. A letter with neither a decomposition nor a table entry is dropped at a word boundary and becomes a separator inside a word. */
 export function slugify(text) {
   const withoutAccents = String(text ?? '')
     .toLowerCase()
