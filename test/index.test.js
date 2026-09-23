@@ -31,3 +31,8 @@ test('truncate pins the conformant outputs at the low end of max', () => {
   assert.equal(truncate('a', 1), 'a');
   assert.equal(truncate('abcdefgh', 2), 'a…');
 });
+
+test('truncate returns an empty string when max is negative', () => {
+  assert.equal(truncate('abc', -5), '');
+  assert.equal(truncate('', -1), '');
+});
