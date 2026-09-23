@@ -20,9 +20,10 @@ export function escapeHtml(text) {
     .replace(/'/g, '&#39;');
 }
 
-/** The text as is when it fits in `max` characters, otherwise cut with an ellipsis as the last character. */
+/** The text as is when it fits in `max` characters, otherwise cut with an ellipsis as the last character. A `max` below 1 has no room for the ellipsis and yields an empty string. */
 export function truncate(text, max = 80) {
   const s = String(text ?? '');
+  if (max < 1) return '';
   if (s.length <= max) return s;
-  return `${s.slice(0, Math.max(0, max - 1))}…`;
+  return `${s.slice(0, max - 1)}…`;
 }

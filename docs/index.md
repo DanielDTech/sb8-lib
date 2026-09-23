@@ -23,7 +23,8 @@ owns three pure functions, each independent of the others and of any state:
   `"`, `'`) so arbitrary text is safe to place inside an element.
 - `truncate(text, max = 80)` — returns the text unchanged when it fits in `max`
   characters, otherwise cuts it so the ellipsis is the last character and the
-  result is exactly `max` characters.
+  result is exactly `max` characters. A `max` below 1 leaves no room for the
+  ellipsis, so it yields `''` rather than a string longer than `max`.
 
 Two conventions hold across all three and any function added beside them: the
 input is coerced with `String(text ?? '')`, so `null` and `undefined` yield `''`
