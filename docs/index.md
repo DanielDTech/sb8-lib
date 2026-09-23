@@ -89,7 +89,7 @@ any platform; it is consumed as source by the sb7 applications, which pin it as 
 git dependency to a tag:
 
 ```
-git+https://github.com/DanielDTech/sb8-lib.git#v0.2.0
+git+https://github.com/DanielDTech/sb8-lib.git#v0.3.0
 ```
 
 A release here is therefore a tag, and consumers adopt it by bumping the ref
